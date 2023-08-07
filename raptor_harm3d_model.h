@@ -1,5 +1,5 @@
 /*
- * raptor_harm_model.c
+ * raptor_harm3d_model.c
  *
  * Please note that most of the code in this file was adapted
  * from GRMONTY (Dolence et al., 2009).

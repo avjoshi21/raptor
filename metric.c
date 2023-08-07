@@ -6,7 +6,7 @@
  */
 #include <math.h>
 #include "parameters.h"
-#include "raptor_harm_model.h" // We need hslope from here - ought to move it to constants.h!!
+#include "raptor_harm3d_model.h" // We need hslope from here - ought to move it to constants.h!!
 #include "functions.h"
 #include "constants.h"
 #include <stdio.h>
