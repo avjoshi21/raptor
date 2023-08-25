@@ -43,7 +43,7 @@ extern double a;
 extern double R0;
 
 // Metric
-#define metric   (MKS2)
+#define metric   (FMKS2)
 #if(metric == BL || metric == KS || metric == DM)
     #define logscale (0)    // Standard BL/KS coordinates; no logarithmic radius
 #elif(metric == MBL || metric == MKS || metric == MKS2 || metric == FMKS2)

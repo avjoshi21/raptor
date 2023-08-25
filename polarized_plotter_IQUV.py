@@ -12,10 +12,10 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 img_size = 160
 
 # 2D array to contain image
-imgI = [[0 for x in xrange(img_size)] for x in xrange(img_size)]
-imgQ = [[0 for x in xrange(img_size)] for x in xrange(img_size)]
-imgU = [[0 for x in xrange(img_size)] for x in xrange(img_size)]
-imgV = [[0 for x in xrange(img_size)] for x in xrange(img_size)]
+imgI = [[0 for x in range(img_size)] for x in range(img_size)]
+imgQ = [[0 for x in range(img_size)] for x in range(img_size)]
+imgU = [[0 for x in range(img_size)] for x in range(img_size)]
+imgV = [[0 for x in range(img_size)] for x in range(img_size)]
 
 fluxI = 0.
 fluxQ = 0.
@@ -104,5 +104,5 @@ print(fluxU)
 print('flux V')
 print(fluxV)
 
-pl.savefig('figures/IQUV_plot.pdf', transparent=False)
+pl.savefig('plots/IQUV_plot.png', transparent=False)
 
