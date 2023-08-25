@@ -49,6 +49,7 @@ double Ladv, dMact;
 double R0, Rin, Rh, Rout, Rms;
 double a;
 double hslope;
+double mks_smooth, poly_xt, poly_alpha, poly_norm;
 double startx[NDIM], stopx[NDIM], dx[NDIM];
 double dlE, lE0;
 double gam;

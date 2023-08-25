@@ -6,7 +6,8 @@
  */
 #include <math.h>
 #include "parameters.h"
-#include "raptor_harm3d_model.h" // We need hslope from here - ought to move it to constants.h!!
+// #include "raptor_harm3d_model.h" // We need hslope from here - ought to move it to constants.h!!
+#include "coordinates.h"
 #include "functions.h"
 #include "constants.h"
 #include <stdio.h>
@@ -115,6 +116,11 @@ void metric_dd(const double X_u[4], double g_dd[4][4]){
     g_dd[3][1] = g_dd[1][3];
     g_dd[3][3] =
         sin2th * (rho2 + a * a * sin2th * (1. + 2. * r / rho2)) * pfac * pfac;
+
+#elif(metric == FMKS2) //FMKS, same as MKS2 but wider zones near pols
+    gcov_func(X_u, g_dd);
+
+
 #endif
 }
 
@@ -200,6 +206,12 @@ void metric_uu(const double X_u[4], double g_uu[4][4]){
 
     g_uu[3][1] = g_uu[1][3];
     g_uu[3][3] = irho2 / (sin2th);
+
+#elif(metric == FMKS2) // FMKS, similar to MKS2 but wider zones near pole
+    double g_dd[NDIM][NDIM];
+    LOOP_ij g_dd[i][j] = 0.;
+    gcov_func(X_u,g_dd);
+    gcon_func(g_dd,g_uu);
 
 #elif(metric == DM) // Modified Schwarzschild metric with dark matter present)
 

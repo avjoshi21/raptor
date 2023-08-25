@@ -35,6 +35,7 @@ extern double Thetae_unit;
 #define KS       (3)        // Kerr-Schild,                   x1=r, x2=th, and x3=phi
 #define MKS      (4)        // modified Kerr-Schild,     x1=log(r), x2=th, and x3=phi
 #define MKS2     (9)        // Proper MKS coords
+#define FMKS2    (10)       // FMKS for iharm and KHARMA, same as MKS2 but slightly wider zones near the pole
 #define DM       (5)
 //#define a        (0.0)    // Black hole spin (range: [0,1]), only for BL,MBL,KS,MKS
 //#define R0       (0.0)      // Parameter for MKS coordinates.
@@ -45,7 +46,7 @@ extern double R0;
 #define metric   (MKS2)
 #if(metric == BL || metric == KS || metric == DM)
     #define logscale (0)    // Standard BL/KS coordinates; no logarithmic radius
-#elif(metric == MBL || metric == MKS || metric == MKS2)
+#elif(metric == MBL || metric == MKS || metric == MKS2 || metric == FMKS2)
     #define logscale (1)    // Modified BL/KS coordinates; logarithmic radius
 #endif
 
@@ -86,8 +87,8 @@ double M_UNIT;
 //#define M_unit    (2.3e28) // M87, for Michael's run
 //#define M_unit  (4.543e-7) // For spherical accretion
 
-//#define source_dist    (2.47e22) // Distance to Sgr A* (cm)
-#define source_dist    (5.061e25) // Distance to M87 (cm)
+#define source_dist    (2.47e22) // Distance to Sgr A* (cm)
+// #define source_dist    (5.061e25) // Distance to M87 (cm)
 
 // These are for simple analytical model - move to different .c file!!
 #define n_e0           (4.5e6)   // Electron density normalization
