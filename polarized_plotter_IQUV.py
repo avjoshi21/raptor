@@ -5,12 +5,15 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pylab as pl
 import numpy as np
+import sys, os, glob
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+filename = sys.argv[1]
 '''READING THE DATA'''
 
-img_size = 160
-
+# img_size = 20
+img_data = np.loadtxt(filename);
+img_size = int(np.sqrt(img_data.shape[0]))
 # 2D array to contain image
 imgI = [[0 for x in range(img_size)] for x in range(img_size)]
 imgQ = [[0 for x in range(img_size)] for x in range(img_size)]
@@ -22,7 +25,8 @@ fluxQ = 0.
 fluxU = 0.
 fluxV = 0.
 
-f = open('output/img_data_2.300000e+11_IQUV.dat','r');
+
+f = open(filename,'r');
 
 for line in f:
     columns=line.split()
@@ -104,5 +108,5 @@ print(fluxU)
 print('flux V')
 print(fluxV)
 
-pl.savefig('plots/IQUV_plot.png', transparent=False)
+pl.savefig(f"plots/{(filename.split('/')[-1]).replace('.dat','.png')}", transparent=False)
 
