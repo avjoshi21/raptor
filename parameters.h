@@ -87,8 +87,8 @@ double M_UNIT;
 //#define M_unit    (2.3e28) // M87, for Michael's run
 //#define M_unit  (4.543e-7) // For spherical accretion
 
-#define source_dist    (2.47e22) // Distance to Sgr A* (cm)
-// #define source_dist    (5.061e25) // Distance to M87 (cm)
+// #define source_dist    (2.47e22) // Distance to Sgr A* (cm)
+#define source_dist    (5.061e25) // Distance to M87 (cm)
 
 // These are for simple analytical model - move to different .c file!!
 #define n_e0           (4.5e6)   // Electron density normalization
@@ -136,17 +136,17 @@ double STEPSIZE;
 /////////
 
 #define DIM 4
-#define LOOP_i    for(i = 0; i < DIM; i++)
-#define LOOP_ij   for(i = 0; i < DIM; i++) \
-                  for(j = 0; j < DIM; j++)
-#define LOOP_kl   for(k = 0; k < DIM; k++) \
-                  for(l = 0; l < DIM; l++)
-#define LOOP_ijk  for(i = 0; i < DIM; i++) \
-                  for(j = 0; j < DIM; j++) \
-                  for(k = 0; k < DIM; k++)
-#define LOOP_ijkl for(i = 0; i < DIM; i++) \
-                  for(j = 0; j < DIM; j++) \
-                  for(k = 0; k < DIM; k++) \
-                  for(l = 0; l < DIM; l++)
+#define LOOP_i    for(int i = 0; i < DIM; i++)
+#define LOOP_ij   for(int i = 0; i < DIM; i++) \
+                  for(int j = 0; j < DIM; j++)
+#define LOOP_kl   for(int k = 0; k < DIM; k++) \
+                  for(int l = 0; l < DIM; l++)
+#define LOOP_ijk  for(int i = 0; i < DIM; i++) \
+                  for(int j = 0; j < DIM; j++) \
+                  for(int k = 0; k < DIM; k++)
+#define LOOP_ijkl for(int i = 0; i < DIM; i++) \
+                  for(int j = 0; j < DIM; j++) \
+                  for(int k = 0; k < DIM; k++) \
+                  for(int l = 0; l < DIM; l++)
 
 #endif // PARAMETERS_H

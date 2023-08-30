@@ -137,8 +137,8 @@ void f_geodesic(double *y, double *fvector){
     double A_u[4] = {0.,   0.,   0.,   0.  }; // d^2X/dLambda^2
 
     // Obtain the Christoffel symbols at the current location
-    connection_udd(X_u, gamma_udd);
-    //connection_num_udd(X_u, gamma_udd);
+    // connection_udd(X_u, gamma_udd);
+    connection_num_udd(X_u, gamma_udd);
 
     // Compute 4-acceleration using the geodesic equation
     int i, j, k; // Einstein summation over indices v and w
@@ -244,8 +244,8 @@ void f_parallel(const double y[], double complex f_u[], double fvector[], double
     double complex A_u[4] = {0.,   0.,   0.,   0.  }; // d^2X/dLambda^2
 
     // Obtain the Christoffel symbols at the current location
-    connection_udd(X_u,gamma_udd);
-    //connection_num_udd(X_u, gamma_udd);
+    // connection_udd(X_u,gamma_udd);
+    connection_num_udd(X_u, gamma_udd);
 
     // Compute 4-acceleration using the geodesic equation
     LOOP_ijk A_u[i] -= gamma_udd[i][j][k] * U_u[j] * U_u[k];

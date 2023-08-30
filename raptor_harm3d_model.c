@@ -101,6 +101,8 @@ void init_harm3d_data(char *fname)
 	fscanf(fp, "%lf ", &Rin);
 	fscanf(fp, "%lf ", &Rout);
 
+	poly_norm = 0.5*M_PI*1./(1. + 1./(poly_alpha + 1.)*1./pow(poly_xt, poly_alpha));
+
 	stopx[0] = 1.;
 	stopx[1] = startx[1] + N1 * dx[1];
 	stopx[2] = startx[2] + N2 * dx[2];
@@ -143,57 +145,101 @@ void init_harm3d_data(char *fname)
 
 // Returns the value of f(Xg2) given some value for Xr2. For the correct Xg2,
 // we have f(Xg2) = 0.
-double f_Xg2(double Xg2, double Xr2)
+double f_Xg2(double Xg2, double Xr2, double Xg1)
 {
-	return M_PI * Xg2 + 0.5 * (1. - hslope) * sin(2. * M_PI * Xg2) - Xr2;
+	if (metric == MKS2)
+		return M_PI * Xg2 + 0.5 * (1. - hslope) * sin(2. * M_PI * Xg2) - Xr2;
+	else if (metric == FMKS2)
+	{
+		double th_g = M_PI * Xg2 + 0.5 * (1. - hslope) * sin(2. * M_PI * Xg2) - Xr2;
+		double th_j = poly_norm * ( 2 * Xg2 - 1) * (1 + pow((2 * Xg2 -1)/poly_xt,poly_alpha)/(1+poly_alpha)) + M_PI/2;
+		double Dx1 = Xg1 - startx[1];
+		return th_g + exp(- mks_smooth * Dx1)*(th_j - th_g);
+	}
 }
 
+
 // Returns the value of f'(Xg2).
-double f_primed_Xg2(double Xg2)
+double f_primed_Xg2(double Xg2, double Xg1)
 {
-	return M_PI + M_PI * (1. - hslope) * cos(2. * M_PI * Xg2);
+	if (metric == MKS2)
+	{
+		return M_PI + M_PI * (1. - hslope) * cos(2. * M_PI * Xg2);
+	}
+	else if (metric==FMKS2)
+	{
+		double th_gprime = M_PI + M_PI * (1. - hslope) * cos(2. * M_PI * Xg2);
+		double th_jprime = 2 * poly_norm * (1 + pow((2*Xg2 - 1)/poly_xt,poly_alpha));
+		double Dx1 = Xg1 - startx[1];
+		return th_gprime + exp( - mks_smooth *  Dx1)*(th_jprime - th_gprime);
+	}
 }
 
 // This function does "one Newton-Raphson step", i.e. it returns the NEW,
 // "better" estimate Xg2_1 based on the input estimate Xg2_0.
-double NR_stepX(double Xg2_0, double Xr2)
+double NR_stepX(double Xg2_0, double Xg1_0, double Xr2)
 {
-	double fprime = f_primed_Xg2(Xg2_0);
+	double fprime = f_primed_Xg2(Xg2_0,Xg1_0);
 
 	if (fabs(fprime) < 1.e-9)
 		printf("fprime = %+.15e\n", fprime);
 
-	return Xg2_0 - f_Xg2(Xg2_0, Xr2) / f_primed_Xg2(Xg2_0);
+	return Xg2_0 - f_Xg2(Xg2_0, Xr2, Xg1_0) / f_primed_Xg2(Xg2_0,Xg1_0);
 }
 
 // Returns the value of f(Ug2) given some value for Ur2. For the correct Ug2,
 // we have f(Ug2) = 0.
-double f_Ug2(double Ug2, double Ur2, double Xg2)
+double f_Ug2(double Ug2, double Ug1, double Ur2, double Xg2, double Xg1)
 {
-	return M_PI * Ug2 * (1. + (1. - hslope) * cos(2. * M_PI * Xg2)) - Ur2;
+	if (metric == MKS2)
+		return M_PI * Ug2 * (1. + (1. - hslope) * cos(2. * M_PI * Xg2)) - Ur2;
+	else if (metric == FMKS2){
+		double th_g = M_PI * Xg2 + 0.5 * (1. - hslope) * sin(2. * M_PI * Xg2);
+		double th_j = poly_norm * ( 2 * Xg2 - 1) * (1 + pow((2 * Xg2 -1)/poly_xt,poly_alpha)/(1+poly_alpha)) + M_PI/2;
+		double th_gprime = M_PI + M_PI * (1. - hslope) * cos(2. * M_PI * Xg2);
+		double th_jprime = 2 * poly_norm * (1 + pow((2*Xg2 - 1)/poly_xt,poly_alpha));
+		double Dx1 = Xg1 - startx[1];
+		double dthdx2 = th_gprime + exp( - mks_smooth * Dx1)*(th_jprime - th_gprime);
+		double dthdx1 = - (mks_smooth) * exp(- mks_smooth * Dx1) * (th_j - th_g);
+		// printf("%lf %lf %lf %lf %lf %lf", Ug2, Ug1, Ur2, Xg2, Xg1, ((dthdx2*Ug2 + dthdx1*Ug1) - Ur2));
+		// exit(-1);
+		return (dthdx2*Ug2 + dthdx1*Ug1) - Ur2;
+	}
 }
 
 // Returns the value of f'(Ug2).
-double f_primed_Ug2(double Ug2, double Xg2)
+double f_primed_Ug2(double Ug2, double Ug1, double Xg2, double Xg1)
 {
-	return M_PI * (1. + (1. - hslope) * cos(2. * M_PI * Xg2));
+	if (metric == MKS2)
+		return M_PI * (1. + (1. - hslope) * cos(2. * M_PI * Xg2));
+	else if (metric == FMKS2){
+		double th_gprimeprime = - 2 * M_PI * M_PI * (1. - hslope) * sin(2. * M_PI * Xg2);
+		double th_jprimeprime = 4 * poly_alpha * poly_norm * pow((2*Xg2 - 1)/poly_xt,poly_alpha-1)/poly_xt;
+		double Dx1 = Xg1 - startx[1];
+		double dsq_th_dx2sq = th_gprimeprime + exp(- mks_smooth * Dx1) * (th_jprimeprime - th_gprimeprime);
+		double th_gprime = M_PI + M_PI * (1. - hslope) * cos(2. * M_PI * Xg2);
+		double th_jprime = 2 * poly_norm * (1 + pow((2*Xg2 - 1)/poly_xt,poly_alpha));
+		double dsq_th_dx1dx2 = - (mks_smooth) * exp(- mks_smooth * Dx1) * (th_jprime - th_gprime);
+		return dsq_th_dx2sq*Ug2 + dsq_th_dx1dx2*Ug1;
+	}
+
 }
 
 // This function does "one Newton-Raphson step", i.e. it returns the NEW,
 // "better" estimate Ug2_1 based on the input estimate Ug2_0.
-double NR_stepU(double Ug2_0, double Ur2, double Xg2)
+double NR_stepU(double Ug2_0, double Ug1_0, double Ur2, double Xg2, double Xg1)
 {
-	double fprime = f_primed_Ug2(Ug2_0, Xg2);
+	double fprime = f_primed_Ug2(Ug2_0, Ug1_0, Xg2, Xg1);
 
 	if (fabs(fprime) < 1.e-9)
 		printf("fprime = %+.15e\n", fprime);
 
-	return Ug2_0 - f_Ug2(Ug2_0, Ur2, Xg2) / f_primed_Ug2(Ug2_0, Xg2);
+	return Ug2_0 - f_Ug2(Ug2_0, Ug1_0, Ur2, Xg2, Xg1) / f_primed_Ug2(Ug2_0, Ug1_0, Xg2, Xg1);
 }
 
 // Given the X2 coordinate in RAPTOR's convention, Xr2, we compute and return
 // an estimate for the corresponding coordinate in HARM2D's convention, Xg2.
-double Xg2_approx_rand(double Xr2)
+double Xg2_approx_rand(double Xr2, double Xg1)
 {
 	double Xg2_current = 0.1; // Initial guess; reasonable b/c Xg2 E [0, 1]
 	double Xg2_prev = 1.e-15; // Keeps track of previous estimate to converge
@@ -214,7 +260,7 @@ double Xg2_approx_rand(double Xr2)
 		while (steps < maxsteps && fabs(Xg2_current - Xg2_prev) > tolerance)
 		{
 			Xg2_prev = Xg2_current;
-			Xg2_current = NR_stepX(Xg2_current, Xr2);
+			Xg2_current = NR_stepX(Xg2_current, Xg1, Xr2);
 			steps++;
 		}
 	}
@@ -225,7 +271,7 @@ double Xg2_approx_rand(double Xr2)
 
 // Given the U2 coordinate in RAPTOR's convention, Ur2, we compute and return
 // an estimate for the corresponding vector component in HARM2D's convention, Ug2.
-double Ug2_approx_rand(double Ur2, double Xg2)
+double Ug2_approx_rand(double Ur2, double Ug1, double Xg2, double Xg1)
 {
 	double Ug2_current = 0.1; // Initial guess; reasonable b/c Xg2 E [0, 1]
 	double Ug2_prev = 1.e-15; // Keeps track of previous estimate to converge
@@ -236,7 +282,7 @@ double Ug2_approx_rand(double Ur2, double Xg2)
 	int count = 0;
 
 	// Main loop
-	while (fabs(Ug2_current - Ug2_prev) > tolerance)
+	while (fabs(Ug2_current - Ug2_prev) > tolerance && count<1000)
 	{
 		Ug2_current = (double)rand() / (double)RAND_MAX;
 		steps = 0;
@@ -245,11 +291,18 @@ double Ug2_approx_rand(double Ur2, double Xg2)
 		while (steps < maxsteps && fabs(Ug2_current - Ug2_prev) > tolerance)
 		{
 			Ug2_prev = Ug2_current;
-			Ug2_current = NR_stepU(Ug2_current, Ur2, Xg2);
+			Ug2_current = NR_stepU(Ug2_current, Ug1, Ur2, Xg2, Xg1);
 			steps++;
+			// if (count==1){
+			// 	printf("->%lf ",Ug2_current);
+			// }
 		}
+		// printf("%e \n",Ug2_current);
 	}
-
+	if (count>=1000){
+		printf("\nUNABLE TO SOLVE FOR U[X2]. EXITING\n");
+		exit(-1);
+	}
 	return Ug2_current;
 }
 

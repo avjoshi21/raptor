@@ -11,6 +11,7 @@
 #include <math.h>
 #include "functions.h"
 #include "parameters.h"
+#include "coordinates.h"
 
 // Lowers the index of the contravariant vector V_u, storing the results in a
 // covariant one (V_d), based on the metric at position X_u

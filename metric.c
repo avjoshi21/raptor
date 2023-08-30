@@ -775,7 +775,7 @@ void initialize_photon(double alpha, double beta, double photon_u[8], double t_i
     k_u[1] = sqrt((-k_u[0]*k_d[0]-k_u[2]*k_d[2]-k_u[3]*k_d[3]) / g_dd_11);
 
     // Normalize the photon wavevector with cam_freq in Hz
-    int i;
+    // int i;
 //    LOOP_i k_u[i] *= PLANCK_CONSTANT * cam_freq /
   //                   (ELECTRON_MASS * SPEED_OF_LIGHT*SPEED_OF_LIGHT);
 
@@ -792,22 +792,52 @@ void initialize_photon(double alpha, double beta, double photon_u[8], double t_i
 //    printf("\nFirst we build k in BL coords");
 //    LOOP_i printf("\n%+.15e", photon_u[i]);
 //    LOOP_i printf("\n%+.15e", photon_u[i+4]);
-
+    // printf("\n PRINTING Xcam in BL\n");
+    // LOOP_i printf("%lf ",photon_u[i]);
+    // printf("\n PRINTING Ucam in BL\n");
+    // LOOP_i printf("%lf ",photon_u[i+4]);
 // Convert k_u to the coordinate system that is currently used
-#if(metric == KS || metric == MKS || metric == MKS2)
+#if(metric == KS || metric == MKS || metric == MKS2 || metric == FMKS2)
 
     double KSphoton_u[8];
-    BL_to_KS_u(photon_u, KSphoton_u);
+    BL_to_KS_u(photon_u, KSphoton_u);   
     LOOP_i{
         photon_u[i] = KSphoton_u[i];
         photon_u[i+4] = KSphoton_u[i+4];
     }
 
 #endif
-
-#if(metric == MKS2)
-    photon_u[2] = Xg2_approx_rand(photon_u[2]); // We only transform theta - r is already exponential and R0 = 0
-    photon_u[6] = Ug2_approx_rand(photon_u[6], photon_u[2]); // We only transform theta - r is already exponential and R0 = 0
+#if(metric == MKS2 || metric == FMKS2)
+    photon_u[2] = Xg2_approx_rand(photon_u[2], photon_u[1]); // We only transform theta - r is already exponential and R0 = 0
+    // apply transformation to photon 4velocity as given in coordinates.c, no need to root find for u^x2
+    // do this before solving for photon_x2 but after computing x2 of photon as we need x_u in FMKS
+    double dXdx[4][4];
+    LOOP_ij dXdx[i][j]=0.0;
+    double X_u[4];
+    LOOP_i X_u[i] = photon_u[i];
+    // setting k to fully KS (no log(r)) for the transformation
+    photon_u[5] *= exp(X_u[1]);
+    // printf("Before metric transformation\n");
+    // LOOP_i printf("%e %e |",X_u[i],photon_u[i+4]);
+    set_dXdx(X_u,dXdx);
+    double U_u_KS[4];
+    LOOP_i{
+        U_u_KS[i] = photon_u[i+4];
+        photon_u[i+4] = 0.0;
+    }
+    LOOP_ij{
+        photon_u[i+4]+=dXdx[i][j]*U_u_KS[j];
+    }        
+    // printf("After metric transformation\n");
+    // LOOP_i printf("%e %e |",photon_u[i],photon_u[i+4]);
+    // printf("\n");
+    // if (metric != FMKS2){
+    //     LOOP_i photon_u[i+4] = U_u_KS[i];
+    //     photon_u[6] = Ug2_approx_rand(KSphoton_u[6], photon_u[5], photon_u[2], photon_u[1]); // We only transform theta - r is already exponential and R0 = 0
+    // }    
+    // printf("After root finding\n");
+    // LOOP_i printf("%e %e |",photon_u[i],photon_u[i+4]);
+    // printf("\n");
 #endif
 
 LOOP_i Xcam_u[i] = photon_u[i];

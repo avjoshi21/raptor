@@ -214,6 +214,6 @@ double interp_scalar(double ***var, int i, int j,int k, double coeff[4]);
 void Xtoijk(double *X, int *i, int *j,int *k, double *del);
 void get_fluid_params(double X[4], double *Ne,
                       double *Thetae, double *B, double *B_u, double Ucon[4], int *IN_VOLUME);
-double Xg2_approx_rand(double Xr2);
-double Ug2_approx_rand(double Ur2, double Xg2);
+double Xg2_approx_rand(double Xr2, double Xg1);
+double Ug2_approx_rand(double Ur2, double Ug1, double Xg2, double Xg1);
 #endif // FUNCTIONS_H

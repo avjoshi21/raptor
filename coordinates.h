@@ -11,11 +11,11 @@
 #define METRIC_BHACMKS 4
 // "Funky" MKS coordinates as defined on IL wiki, see
 // https://github.com/AFD-Illinois/docs/wiki/Coordinates
-#define METRIC_FMKS 10
+#define METRIC_FMKS FMKS2
 // MKS3 coordinates from koral-light
 #define METRIC_MKS3 11
 // Spherical coordinates in Minkowski space
-#define METRIC_MINKOWSKI 0
+#define METRIC_MINKOWSKI CAR
 // Exponential spherical coordinates in Minkowski space
 #define METRIC_EMINKOWSKI 5
 // eKS exponential radial coordinate; KS otherwise. note not the same 

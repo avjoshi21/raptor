@@ -157,8 +157,8 @@ int main(int argc, char *argv[]){
         printf("freq = %+.15e\n", frequencies[f]);
     }
 
+    #pragma omp parallel for default(none) private(f,steps,alpha,beta,photon_u) shared(num_indices,energy_spectrum,frequencies,intensityfield,f_x_field,f_y_field,I_field, Q_field, U_field, V_field, IQUV_field,p_field,lambdafield,x,stepx,stepy,CUTOFF_INNER, IMG_WIDTH, IMG_HEIGHT, CAM_SIZE_X, CAM_SIZE_Y) collapse(2) schedule(static,1)
     for(x = 0; x < IMG_WIDTH; x++){ // For all pixel columns...
-        #pragma omp parallel for default(none) private(f,steps,alpha,beta,photon_u) shared(num_indices,energy_spectrum,frequencies,intensityfield,f_x_field,f_y_field,I_field, Q_field, U_field, V_field, IQUV_field,p_field,lambdafield,x,stepx,stepy,CUTOFF_INNER, IMG_WIDTH, IMG_HEIGHT, CAM_SIZE_X, CAM_SIZE_Y) schedule(static,1)
         for(y = 0; y < IMG_HEIGHT; y++){ // For all pixel rows (distributed over threads)...
 
             double *lightpath2 = malloc(9 * max_steps * sizeof(double));
@@ -204,8 +204,8 @@ int main(int argc, char *argv[]){
             free(lightpath2);
 	    free(IQUV);
         }
-        #pragma omp barrier
     }
+    #pragma omp barrier
 
     // WRITE OUTPUT FILES
     /////////////////////
