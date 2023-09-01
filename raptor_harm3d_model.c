@@ -421,7 +421,7 @@ void get_fluid_params(double X[NDIM], double *Ne,
 	double Bp[NDIM], Vcon[NDIM], Vfac, VdotV, UdotBp;
 	double gcon[NDIM][NDIM], gcov[NDIM][NDIM], Bcov[NDIM], Ucov[NDIM], coeff[4];
 	double bsq, beta, beta_trans, b2, trat, two_temp_gam, Th_unit, Be;
-	double Rlow = 1, Rhigh = 1;
+	double Rlow = 1, Rhigh = 160;
 	if (X[1] < startx[1] ||
 		X[1] > stopx[1] ||
 		X[2] < startx[2] ||
@@ -497,7 +497,7 @@ void get_fluid_params(double X[NDIM], double *Ne,
 	Be = (-(1. + gam * uu / (rho)) * Ucov[0]);
 	beta_trans = 1.;
 	b2 = pow(beta / beta_trans, 2);
-	trat = 3.; // Rhigh * b2/(1. + b2) + Rlow /(1. + b2);
+	trat = Rhigh * b2/(1. + b2) + Rlow /(1. + b2);
 	two_temp_gam = 0.5 * ((1. + 2. / 3. * (trat + 1.) / (trat + 2.)) + gam);
 	Th_unit = (1.4444444444 - 1.) * (PROTON_MASS / ELECTRON_MASS) / (1. + trat);
 	*Thetae = (2. / 15.) * (uu / rho) * (PROTON_MASS / ELECTRON_MASS) + 1e-40;

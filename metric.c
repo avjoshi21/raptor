@@ -118,8 +118,57 @@ void metric_dd(const double X_u[4], double g_dd[4][4]){
         sin2th * (rho2 + a * a * sin2th * (1. + 2. * r / rho2)) * pfac * pfac;
 
 #elif(metric == FMKS2) //FMKS, same as MKS2 but wider zones near pols
-    gcov_func(X_u, g_dd);
 
+    gcov_func(X_u, g_dd);
+//     double x1 = X_u[1];
+//     double x2 = X_u[2];
+//     double dx1 = x1 - startx[1];
+//     double polyalpha=poly_alpha,polyxt=poly_xt,polynorm=poly_norm,mkssmooth=mks_smooth;
+//     g_dd[0][0] = -1 + (2*exp(x1))/(exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//           (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2));
+//     g_dd[0][1] = (2*exp(2*x1))/(exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//          (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2));
+//     g_dd[0][2] = 0.0;
+//     g_dd[0][3] = (-2*a*exp(x1)*pow(sin(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - 
+//            ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2))/
+//    (exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//          (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2));
+//     g_dd[1][1] = exp(2*x1)*(1 + (2*exp(x1))/
+//        (exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//              (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2))) + 
+//    (pow(mkssmooth,2)*(exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//             (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2))*
+//       pow(M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.,2))/exp(2*dx1*mkssmooth);
+//     g_dd[1][2] = -((mkssmooth*(M_PI + (1 - hslope)*M_PI*cos(2*M_PI*x2) + (-M_PI + (2*polyalpha*polynorm*(-1 + 2*x2)*pow((-1 + 2*x2)/polyxt,-1 + polyalpha))/((1 + polyalpha)*polyxt) + 
+//             2*polynorm*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - (1 - hslope)*M_PI*cos(2*M_PI*x2))/exp(dx1*mkssmooth))*
+//        (exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//              (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2))*
+//        (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.))/exp(dx1*mkssmooth));
+//     g_dd[1][3] = -(a*exp(x1)*(1 + (2*exp(x1))/
+//         (exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//               (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2)))*
+//      pow(sin(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - 
+//            ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2));
+//     g_dd[2][2] = pow(M_PI + (1 - hslope)*M_PI*cos(2*M_PI*x2) + (-M_PI + (2*polyalpha*polynorm*(-1 + 2*x2)*pow((-1 + 2*x2)/polyxt,-1 + polyalpha))/((1 + polyalpha)*polyxt) + 
+//         2*polynorm*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - (1 - hslope)*M_PI*cos(2*M_PI*x2))/exp(dx1*mkssmooth),2)*
+//    (exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//          (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2));
+//     g_dd[2][3] = 0.0;
+//     g_dd[3][3] = pow(sin(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - 
+//          ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2)*(exp(2*x1) + 
+//      pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - 
+//             ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2) + 
+//      pow(a,2)*(1 + (2*exp(x1))/
+//          (exp(2*x1) + pow(a,2)*pow(cos(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + 
+//                (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2)))*
+//       pow(sin(M_PI*x2 + ((1 - hslope)*sin(2*M_PI*x2))/2. + (M_PI/2. - M_PI*x2 + polynorm*(-1 + 2*x2)*(1 + pow((-1 + 2*x2)/polyxt,polyalpha)/(1 + polyalpha)) - 
+//             ((1 - hslope)*sin(2*M_PI*x2))/2.)/exp(dx1*mkssmooth)),2));
+
+//     for (int i=0; i<4; i++){
+//         for (int j=0;j<i;j++){
+//             g_dd[i][j] = g_dd[j][i];
+//         }
+//     }
 
 #endif
 }
@@ -210,7 +259,7 @@ void metric_uu(const double X_u[4], double g_uu[4][4]){
 #elif(metric == FMKS2) // FMKS, similar to MKS2 but wider zones near pole
     double g_dd[NDIM][NDIM];
     LOOP_ij g_dd[i][j] = 0.;
-    gcov_func(X_u,g_dd);
+    metric_dd(X_u,g_dd);
     gcon_func(g_dd,g_uu);
 
 #elif(metric == DM) // Modified Schwarzschild metric with dark matter present)
@@ -726,7 +775,7 @@ void connection_udd(const double X_u[4], double gamma[4][4][4]){
 // Initialize a contravariant photon wave vector based on impact parameters
 // alpha and beta
 // Ref. Cunningham & Bardeen 1973
-// We want to pick E, L, Q based on impact params alpha, beta
+// We want to M_PIck E, L, Q based on impact params alpha, beta
 // Then construct k_u using E, L, Q
 // The photons all start at the camera location
 void initialize_photon(double alpha, double beta, double photon_u[8], double t_init){
@@ -792,10 +841,7 @@ void initialize_photon(double alpha, double beta, double photon_u[8], double t_i
 //    printf("\nFirst we build k in BL coords");
 //    LOOP_i printf("\n%+.15e", photon_u[i]);
 //    LOOP_i printf("\n%+.15e", photon_u[i+4]);
-    // printf("\n PRINTING Xcam in BL\n");
-    // LOOP_i printf("%lf ",photon_u[i]);
-    // printf("\n PRINTING Ucam in BL\n");
-    // LOOP_i printf("%lf ",photon_u[i+4]);
+
 // Convert k_u to the coordinate system that is currently used
 #if(metric == KS || metric == MKS || metric == MKS2 || metric == FMKS2)
 

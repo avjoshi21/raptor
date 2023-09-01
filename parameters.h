@@ -87,8 +87,8 @@ double M_UNIT;
 //#define M_unit    (2.3e28) // M87, for Michael's run
 //#define M_unit  (4.543e-7) // For spherical accretion
 
-// #define source_dist    (2.47e22) // Distance to Sgr A* (cm)
-#define source_dist    (5.061e25) // Distance to M87 (cm)
+#define source_dist    (2.50718e22) // Distance to Sgr A* (cm)
+// #define source_dist    (5.061e25) // Distance to M87 (cm)
 
 // These are for simple analytical model - move to different .c file!!
 #define n_e0           (4.5e6)   // Electron density normalization

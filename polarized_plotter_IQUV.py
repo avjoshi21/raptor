@@ -52,6 +52,11 @@ imgQ = pl.transpose(imgQ)
 imgU = pl.transpose(imgU)
 imgV = pl.transpose(imgV)
 
+# scale = 94890.5/img_size**2;
+# fluxI *= scale;
+# fluxQ *= scale;
+# fluxU *= scale;
+# fluxV *= scale;
 
 '''PLOT RESULTS'''
 # Clear the plot
