@@ -500,7 +500,11 @@ void get_fluid_params(double X[NDIM], double *Ne,
 	trat = Rhigh * b2/(1. + b2) + Rlow /(1. + b2);
 	two_temp_gam = 0.5 * ((1. + 2. / 3. * (trat + 1.) / (trat + 2.)) + gam);
 	Th_unit = (1.4444444444 - 1.) * (PROTON_MASS / ELECTRON_MASS) / (1. + trat);
-	*Thetae = (2. / 15.) * (uu / rho) * (PROTON_MASS / ELECTRON_MASS) + 1e-40;
+	// *Thetae = (2. / 15.) * (uu / rho) * (PROTON_MASS / ELECTRON_MASS) + 1e-40;
+	// apply temperature according to PATOKA (Wong 2022)
+	double gam_e = 4.0/3.0, gam_p = 5.0/3.0;
+	*Thetae = (uu / rho) * (PROTON_MASS / ELECTRON_MASS) * ((gam_p-1)*(gam_e -1)/((gam_e-1)*trat + (gam_p-1)));
+
 	Be = (-(1. + two_temp_gam * uu / rho) * Ucov[0]);
 	// if(bsq/rho>0.15){
 	if (uu < 0)
